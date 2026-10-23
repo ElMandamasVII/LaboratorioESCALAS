@@ -20,19 +20,30 @@
     body {
       background-color: var(--bg);
       color: #f1f5f9;
-      font-size: 16px; /* 20% más grande que el tamaño estándar */
+      font-size: 16px;
       line-height: 1.6;
-    }
-    .neon-glow-cyan {
-      box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
-    }
-    .neon-glow-purple {
-      box-shadow: 0 0 25px rgba(168, 85, 247, 0.25);
     }
     .scale-poly {
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    /* Estilos personalizados para scrollbar */
+    /* Estilos de Super Mario Stage */
+    .mario-stage {
+      background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 60%, #18181b 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .mario-character {
+      transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1), bottom 0.35s ease-out, transform 0.2s ease;
+      will-change: left, bottom, transform;
+    }
+    .mario-block {
+      transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .mario-block.hit {
+      transform: translateY(-8px) scale(1.06);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+      border-color: #f59e0b;
+    }
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
@@ -43,9 +54,6 @@
     ::-webkit-scrollbar-thumb {
       background: #2a3047;
       border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3b4466;
     }
   </style>
 </head>
@@ -72,7 +80,7 @@
             Laboratorio de <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-rose-400">Escalas y Frecuencias</span>
           </h1>
           <p class="text-zinc-400 text-base md:text-lg mt-2 max-w-2xl">
-            Aprende por qué la música es un círculo cerrado de 12 horas logarítmicas, cómo cada escala es un polígono geométrico invariable y cómo las canciones saltan de nota en nota.
+            Aprende por qué la música es un círculo cerrado de 12 horas logarítmicas, cómo cada escala es un polígono invariable y cómo las canciones saltan en frecuencia.
           </p>
         </div>
 
@@ -95,11 +103,12 @@
 
       <!-- NAVEGACIÓN POR PESTAÑAS -->
       <nav class="flex flex-wrap items-center gap-2 mt-6 pt-5 border-t border-[#222638]">
-        <button data-tab="tab-explorer" class="tab-btn active px-5 py-2.5 rounded-xl text-base font-bold bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 transition-all">
+        <button data-tab="tab-explorer" class="tab-btn px-5 py-2.5 rounded-xl text-base font-bold text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-all">
           1. Explorador Geométrico & Modos
         </button>
-        <button data-tab="tab-songs" class="tab-btn px-5 py-2.5 rounded-xl text-base font-bold text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-all">
-          2. Canciones & Villancicos en Vivo
+        <button data-tab="tab-songs" class="tab-btn active px-5 py-2.5 rounded-xl text-base font-bold bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 transition-all flex items-center gap-2">
+          <span>2. Canciones & Super Mario en Vivo</span>
+          <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/30 text-amber-300 border border-amber-500/40">Nuevo Mario</span>
         </button>
         <button data-tab="tab-game" class="tab-btn px-5 py-2.5 rounded-xl text-base font-bold text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-all flex items-center gap-2">
           <span>3. Juego: ¿Qué nota sigue?</span>
@@ -111,7 +120,7 @@
     <!-- ========================================== -->
     <!-- PESTAÑA 1: EXPLORADOR GEOMÉTRICO & MODOS -->
     <!-- ========================================== -->
-    <section id="tab-explorer" class="tab-content space-y-6">
+    <section id="tab-explorer" class="tab-content hidden space-y-6">
       
       <!-- Selectores de Escalas y Modos -->
       <div class="bg-[#13151f] border border-[#222638] rounded-2xl p-5 shadow-xl">
@@ -281,14 +290,110 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- PESTAÑA 2: CANCIONES & VILLANCICOS EN VIVO -->
+    <!-- PESTAÑA 2: CANCIONES & SUPER MARIO EN VIVO -->
     <!-- ========================================== -->
-    <section id="tab-songs" class="tab-content hidden space-y-6">
+    <section id="tab-songs" class="tab-content space-y-6">
+      
+      <!-- ESCENARIO SUPER MARIO: SALTOS EN FRECUENCIA -->
+      <div class="bg-[#13151f] border-2 border-amber-500/40 rounded-3xl p-6 shadow-2xl relative">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#222638]">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                ⭐ Física en Acción: Saltos de Frecuencia
+              </span>
+              <span class="text-xs font-mono text-zinc-400">Derecha = Sube (Agudo) • Izquierda = Baja (Grave)</span>
+            </div>
+            <h2 class="text-2xl font-extrabold text-white mt-1">Super Mario Saltador de Notas</h2>
+          </div>
+
+          <!-- Selector de Espaciado: Logarítmico vs Equidistante -->
+          <div class="flex items-center gap-2 bg-[#0d0f17] border border-[#222638] p-1.5 rounded-2xl">
+            <span class="text-xs text-zinc-400 font-bold pl-2">Espaciado:</span>
+            <button id="btnSpacingLog" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-black shadow-lg shadow-amber-500/20 transition-all">
+              📐 Física Logarítmica (Hz)
+            </button>
+            <button id="btnSpacingEqui" class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-zinc-400 hover:text-white transition-all">
+              🎹 Equidistante (Musical)
+            </button>
+          </div>
+        </div>
+
+        <!-- Indicador Dinámico del Salto de Mario -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mt-4 px-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xs uppercase text-zinc-400 font-bold">Dirección del Salto:</span>
+            <span id="marioJumpDirection" class="px-3 py-1 rounded-xl text-xs font-extrabold font-mono bg-zinc-800 text-zinc-400 border border-zinc-700">
+              ⏸️ En Espera
+            </span>
+          </div>
+          <div id="marioFrequencyDelta" class="text-xs font-mono text-cyan-300 bg-cyan-950/60 px-3 py-1 rounded-xl border border-cyan-800">
+            Δf = 0.0 Hz (Esperando reproducción)
+          </div>
+        </div>
+
+        <!-- LIENZO DE LA PISTA DE MARIO -->
+        <div class="mario-stage rounded-2xl border border-zinc-800 mt-4 h-64 md:h-72 relative shadow-inner overflow-hidden">
+          
+          <!-- Nubes decorativas y fondo retro -->
+          <div class="absolute top-4 left-10 text-zinc-700/50 text-3xl select-none">☁️</div>
+          <div class="absolute top-8 right-24 text-zinc-700/50 text-4xl select-none">☁️</div>
+          <div class="absolute top-12 left-1/2 text-zinc-700/40 text-2xl select-none">☁️</div>
+
+          <!-- Contenedor de Bloques/Plataformas de Notas -->
+          <div id="marioTrack" class="absolute inset-0 px-6">
+            <!-- Bloques inyectados dinámicamente -->
+          </div>
+
+          <!-- Personaje de Super Mario (SVG Pixel-Art Responsive) -->
+          <div id="marioChar" class="mario-character absolute w-11 h-13 z-20 pointer-events-none drop-shadow-xl" style="left: 30px; bottom: 85px;">
+            <svg viewBox="0 0 16 16" class="w-full h-full">
+              <!-- Gorra Roja -->
+              <rect x="3" y="1" width="6" height="2" fill="#ef4444"/>
+              <rect x="2" y="3" width="9" height="1" fill="#ef4444"/>
+              <!-- Cara y Nariz -->
+              <rect x="2" y="4" width="7" height="3" fill="#fbcfe8"/>
+              <rect x="3" y="4" width="2" height="1" fill="#78350f"/> <!-- Pelo/Patilla -->
+              <rect x="7" y="4" width="1" height="2" fill="#000000"/> <!-- Ojo -->
+              <rect x="5" y="6" width="4" height="1" fill="#78350f"/> <!-- Bigote -->
+              <!-- Overol Azul y Camisa Roja -->
+              <rect x="2" y="7" width="8" height="2" fill="#ef4444"/>
+              <rect x="4" y="8" width="4" height="4" fill="#2563eb"/>
+              <rect x="2" y="9" width="2" height="2" fill="#fbcfe8"/> <!-- Manos -->
+              <rect x="8" y="9" width="2" height="2" fill="#fbcfe8"/>
+              <!-- Botones amarillos -->
+              <rect x="4" y="9" width="1" height="1" fill="#facc15"/>
+              <rect x="7" y="9" width="1" height="1" fill="#facc15"/>
+              <!-- Zapatos Marrones -->
+              <rect x="2" y="12" width="3" height="2" fill="#78350f"/>
+              <rect x="7" y="12" width="3" height="2" fill="#78350f"/>
+            </svg>
+          </div>
+
+          <!-- Suelo retro -->
+          <div class="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-r from-emerald-800 via-emerald-700 to-emerald-800 border-t-4 border-emerald-500 flex items-center justify-around">
+            <div class="w-full flex justify-between px-4 text-emerald-300/40 text-xs font-mono">
+              <span>◀ NOTAS GRAVES (Frecuencia menor)</span>
+              <span>ESCENARIO DE PROPAGACIÓN FÍSICA</span>
+              <span>NOTAS AGUDAS (Frecuencia mayor) ▶</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explicación de primeros principios del escenario -->
+        <p class="text-xs text-zinc-400 mt-3 leading-relaxed">
+          💡 <strong>Física del Salto:</strong> En modo <em class="text-amber-400">Logarítmico (Hz)</em>, cada salto de Mario refleja la distancia de onda en el aire. Entre Do4 (261 Hz) y Re4 (293 Hz) hay un salto de 32 Hz, pero una octava arriba entre Do5 (523 Hz) y Re5 (587 Hz) ¡el salto físico es de 64 Hz! Aunque para nuestro oído el intervalo suene idéntico (un tono entero).
+        </p>
+
+      </div>
+
+      <!-- SELECCIÓN Y CONTROLES DE CANCIONES -->
       <div class="bg-[#13151f] border border-[#222638] rounded-3xl p-6 shadow-xl">
         <div class="max-w-2xl">
           <h2 class="text-2xl font-bold text-white mb-1">Canciones Populares y Villancicos: La Escala en Acción</h2>
           <p class="text-zinc-400 text-sm">
-            Selecciona una melodía tradicional y mira cómo la rueda de semitonos "dibuja" la canción en tiempo real. Observa cómo cada canción habita rigurosamente dentro de su polígono.
+            Selecciona una melodía tradicional y mira cómo Mario salta en la pista y la rueda de semitonos dibuja la escala.
           </p>
         </div>
 
@@ -361,7 +466,7 @@
           <div class="flex items-center gap-3">
             <button id="btnPlaySong" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black font-extrabold text-base flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all">
               <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              Reproducir Melodía
+              Reproducir Melodía con Mario
             </button>
             <button id="btnStopSong" class="px-5 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-base transition-all">
               Detener
@@ -373,7 +478,7 @@
         <div class="mt-6 bg-[#0d0f17] border border-[#222638] rounded-2xl p-4 text-center">
           <span class="text-xs text-zinc-500 uppercase tracking-widest font-mono block">Nota en Reproducción</span>
           <div id="playingNoteName" class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 my-2">--</div>
-          <div id="playingNoteMeta" class="text-sm font-mono text-zinc-400">Presiona "Reproducir Melodía" para comenzar</div>
+          <div id="playingNoteMeta" class="text-sm font-mono text-zinc-400">Presiona "Reproducir Melodía" para que Mario comience a saltar</div>
         </div>
       </div>
     </section>
@@ -455,12 +560,14 @@
     <!-- FOOTER / CÓMO SUBIR ESTA PÁGINA A LA WEB -->
     <footer class="bg-[#13151f] border border-[#222638] rounded-2xl p-5 text-sm text-zinc-400 flex flex-col md:flex-row items-center justify-between gap-4">
       <div>
-        <span class="font-bold text-white block">🚀 Cómo publicar esta web gratis y compartir tu link:</span>
-        <span>Guarda este archivo como <code class="text-cyan-400 font-mono">index.html</code> y súbelo a <strong>GitHub Pages</strong>, <strong>Vercel</strong> o <strong>Netlify</strong> (Drop & Deploy sin costo).</span>
+        <span class="font-bold text-white block">🚀 Tu repositorio en GitHub:</span>
+        <a href="https://github.com/ElMandamasVII/LaboratorioESCALAS" target="_blank" class="text-cyan-400 hover:underline font-mono">
+          https://github.com/ElMandamasVII/LaboratorioESCALAS
+        </a>
       </div>
       <button onclick="downloadSelf()" class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs flex items-center gap-1.5 transition-all">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-        Descargar este HTML
+        Descargar este HTML actualizado
       </button>
     </footer>
 
@@ -472,35 +579,42 @@
   <script>
     // --- ESTADO GLOBAL ---
     let baseA4 = 440.0;
-    let currentRoot = 2; // D (Re) por defecto para que Dórico brille
+    let currentRoot = 2; // D (Re)
     let currentScaleKey = "dorian";
     let audioCtx = null;
     let osc = null;
     let gainNode = null;
-    let activeFreq = null;
     let isPlayingSequence = false;
-    let sequenceTimeout = null;
+
+    // Mario State
+    let marioSpacingMode = "log"; // "log" (Frecuencia real) o "equi" (Equidistante)
+    let lastMarioNote = null;
+    let marioJumpTimeout = null;
 
     const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
     
-    // Frecuencias base en función de A4
     function getNoteFrequency(noteIndex, octave = 4) {
-      // noteIndex: 0=C, 1=C#... 9=A
-      // semitones respecto a A4: noteIndex - 9 + (octave - 4) * 12
       const semitonesFromA4 = (noteIndex - 9) + (octave - 4) * 12;
       return baseA4 * Math.pow(2, semitonesFromA4 / 12);
+    }
+
+    // Frecuencia directa por semitonos desde C4 (C4 = 0)
+    function getFreqFromC4Offset(semitonesFromC4) {
+      const noteClass = ((semitonesFromC4 % 12) + 12) % 12;
+      const octave = 4 + Math.floor(semitonesFromC4 / 12);
+      return getNoteFrequency(noteClass, octave);
     }
 
     // --- BASE DE DATOS DE ESCALAS Y MODOS CON HISTORIA ---
     const scaleDB = {
       dorian: {
         name: "Modo Dórico",
-        pattern: [0, 2, 3, 5, 7, 9, 10], // D-E-F-G-A-B-C
+        pattern: [0, 2, 3, 5, 7, 9, 10],
         steps: ["T", "S", "T", "T", "T", "S", "T"],
         title: "El Modo del Guerrero Griego y el Renacimiento",
         history: `
           <p>En la Grecia clásica, los <strong>Dorios</strong> eran una de las cuatro grandes tribus helénicas (famosos por Esparta). Su modo musical era considerado el más sobrio, marcial y ético de todos.</p>
-          <p class="mt-2">A diferencia de la escala menor moderna (que tiene una sexta menor melancólica), el Dórico tiene una <strong>6ª Mayor</strong> (en Re Dórico es Si natural). Este intervalo le confiere un color noble, místico y heroico.</p>
+          <p class="mt-2">A diferencia de la escala menor moderna, el Dórico tiene una <strong>6ª Mayor</strong>. Este intervalo le confiere un color noble, místico y heroico.</p>
           <p class="mt-2">Fue la escala favorita de la época renacentista y medieval (como en <em>Greensleeves</em>) y renació en el siglo XX con el Jazz modal en el legendario álbum <em>Kind of Blue</em> de <strong>Miles Davis</strong> ("So What").</p>
         `,
         hitoLabel: "Platón & Esparta",
@@ -568,8 +682,7 @@
       }
     };
 
-    // --- REPERTORIO DE MELODÍAS (CANCIÓN -> NOTAS Y DURACIONES) ---
-    // offset: semitonos respecto a C4, dur: duración relativa
+    // --- REPERTORIO DE MELODÍAS ---
     const songsDB = {
       silentNight: {
         title: "Noche de Paz (Silent Night)",
@@ -577,10 +690,10 @@
         root: 0, // C
         bpm: 90,
         notes: [
-          { n: 7, d: 1.5 }, { n: 9, d: 0.5 }, { n: 7, d: 1 }, { n: 4, d: 2 }, // Sol La Sol Mi
-          { n: 7, d: 1.5 }, { n: 9, d: 0.5 }, { n: 7, d: 1 }, { n: 4, d: 2 }, // Sol La Sol Mi
-          { n: 14, d: 2 }, { n: 14, d: 1 }, { n: 11, d: 2 },                  // Re' Re' Si
-          { n: 12, d: 2 }, { n: 12, d: 1 }, { n: 7, d: 2 }                    // Do' Do' Sol
+          { n: 7, d: 1.5 }, { n: 9, d: 0.5 }, { n: 7, d: 1 }, { n: 4, d: 2 },
+          { n: 7, d: 1.5 }, { n: 9, d: 0.5 }, { n: 7, d: 1 }, { n: 4, d: 2 },
+          { n: 14, d: 2 }, { n: 14, d: 1 }, { n: 11, d: 2 },
+          { n: 12, d: 2 }, { n: 12, d: 1 }, { n: 7, d: 2 }
         ]
       },
       jingleBells: {
@@ -589,10 +702,10 @@
         root: 0,
         bpm: 130,
         notes: [
-          { n: 4, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 2 }, // Mi Mi Mi
-          { n: 4, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 2 }, // Mi Mi Mi
-          { n: 4, d: 1 }, { n: 7, d: 1 }, { n: 0, d: 1.5 }, { n: 2, d: 0.5 }, { n: 4, d: 3 }, // Mi Sol Do Re Mi
-          { n: 5, d: 1 }, { n: 5, d: 1 }, { n: 5, d: 1.5 }, { n: 5, d: 0.5 }, { n: 5, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 2 } // Fa Fa Fa Fa Fa Mi Mi
+          { n: 4, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 2 },
+          { n: 4, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 2 },
+          { n: 4, d: 1 }, { n: 7, d: 1 }, { n: 0, d: 1.5 }, { n: 2, d: 0.5 }, { n: 4, d: 3 },
+          { n: 5, d: 1 }, { n: 5, d: 1 }, { n: 5, d: 1.5 }, { n: 5, d: 0.5 }, { n: 5, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 2 }
         ]
       },
       greensleeves: {
@@ -601,14 +714,14 @@
         root: 2, // Re Dórico
         bpm: 100,
         notes: [
-          { n: 2, d: 1 },  // Re
-          { n: 5, d: 2 },  // Fa
-          { n: 7, d: 1 },  // Sol
-          { n: 9, d: 1.5 }, { n: 10, d: 0.5 }, { n: 9, d: 1 }, // La Sib La
-          { n: 7, d: 2 }, { n: 4, d: 1 },                      // Sol Mi
-          { n: 0, d: 1.5 }, { n: 2, d: 0.5 }, { n: 4, d: 1 }, // Do Re Mi
-          { n: 5, d: 2 }, { n: 2, d: 1 },                      // Fa Re
-          { n: 2, d: 2 }                                       // Re
+          { n: 2, d: 1 },
+          { n: 5, d: 2 },
+          { n: 7, d: 1 },
+          { n: 9, d: 1.5 }, { n: 10, d: 0.5 }, { n: 9, d: 1 },
+          { n: 7, d: 2 }, { n: 4, d: 1 },
+          { n: 0, d: 1.5 }, { n: 2, d: 0.5 }, { n: 4, d: 1 },
+          { n: 5, d: 2 }, { n: 2, d: 1 },
+          { n: 2, d: 2 }
         ]
       },
       odeToJoy: {
@@ -617,10 +730,10 @@
         root: 0,
         bpm: 115,
         notes: [
-          { n: 4, d: 1 }, { n: 4, d: 1 }, { n: 5, d: 1 }, { n: 7, d: 1 }, // Mi Mi Fa Sol
-          { n: 7, d: 1 }, { n: 5, d: 1 }, { n: 4, d: 1 }, { n: 2, d: 1 }, // Sol Fa Mi Re
-          { n: 0, d: 1 }, { n: 0, d: 1 }, { n: 2, d: 1 }, { n: 4, d: 1 }, // Do Do Re Mi
-          { n: 4, d: 1.5 }, { n: 2, d: 0.5 }, { n: 2, d: 2 }              // Mi Re Re
+          { n: 4, d: 1 }, { n: 4, d: 1 }, { n: 5, d: 1 }, { n: 7, d: 1 },
+          { n: 7, d: 1 }, { n: 5, d: 1 }, { n: 4, d: 1 }, { n: 2, d: 1 },
+          { n: 0, d: 1 }, { n: 0, d: 1 }, { n: 2, d: 1 }, { n: 4, d: 1 },
+          { n: 4, d: 1.5 }, { n: 2, d: 0.5 }, { n: 2, d: 2 }
         ]
       },
       twinkle: {
@@ -629,27 +742,27 @@
         root: 0,
         bpm: 105,
         notes: [
-          { n: 0, d: 1 }, { n: 0, d: 1 }, { n: 7, d: 1 }, { n: 7, d: 1 }, // Do Do Sol Sol (Salto de 5ª)
-          { n: 9, d: 1 }, { n: 9, d: 1 }, { n: 7, d: 2 },                 // La La Sol
-          { n: 5, d: 1 }, { n: 5, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 1 }, // Fa Fa Mi Mi
-          { n: 2, d: 1 }, { n: 2, d: 1 }, { n: 0, d: 2 }                  // Re Re Do
+          { n: 0, d: 1 }, { n: 0, d: 1 }, { n: 7, d: 1 }, { n: 7, d: 1 },
+          { n: 9, d: 1 }, { n: 9, d: 1 }, { n: 7, d: 2 },
+          { n: 5, d: 1 }, { n: 5, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 1 },
+          { n: 2, d: 1 }, { n: 2, d: 1 }, { n: 0, d: 2 }
         ]
       },
       smokeOnWater: {
         title: "Riff de Rock (Smoke on Water)",
         scaleKey: "dorian",
-        root: 2, // Re
+        root: 2,
         bpm: 110,
         notes: [
-          { n: 2, d: 1 }, { n: 5, d: 1 }, { n: 7, d: 1.5 }, // Re Fa Sol
-          { n: 2, d: 1 }, { n: 5, d: 1 }, { n: 8, d: 0.5 }, { n: 7, d: 2 }, // Re Fa Lab Sol (Blue note!)
-          { n: 2, d: 1 }, { n: 5, d: 1 }, { n: 7, d: 1.5 }, // Re Fa Sol
-          { n: 5, d: 1 }, { n: 2, d: 2 }                    // Fa Re
+          { n: 2, d: 1 }, { n: 5, d: 1 }, { n: 7, d: 1.5 },
+          { n: 2, d: 1 }, { n: 5, d: 1 }, { n: 8, d: 0.5 }, { n: 7, d: 2 },
+          { n: 2, d: 1 }, { n: 5, d: 1 }, { n: 7, d: 1.5 },
+          { n: 5, d: 1 }, { n: 2, d: 2 }
         ]
       }
     };
 
-    // --- SÍNTESIS DE AUDIO (WEB AUDIO API) ---
+    // --- SÍNTESIS DE AUDIO ---
     function initAudio() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -689,6 +802,153 @@
       highlightNode(null);
     }
 
+    // --- SUPER MARIO NOTE STAGE LOGIC ---
+    // Rango de notas para el escenario de la canción activa
+    let stageMinSemitone = 0; // C4
+    let stageMaxSemitone = 16; // E5
+
+    function getTrackSemitonesForSong(songKey) {
+      const song = songsDB[songKey];
+      const offsets = song.notes.map(n => n.n);
+      const minN = Math.min(...offsets);
+      const maxN = Math.max(...offsets);
+      // Asegurar un margen visual
+      return {
+        min: Math.max(0, minN - 1),
+        max: maxN + 1
+      };
+    }
+
+    function renderMarioStage() {
+      const track = document.getElementById("marioTrack");
+      track.innerHTML = "";
+
+      const range = getTrackSemitonesForSong(currentSongKey);
+      stageMinSemitone = range.min;
+      stageMaxSemitone = range.max;
+
+      const totalSemitones = stageMaxSemitone - stageMinSemitone;
+      const minFreq = getFreqFromC4Offset(stageMinSemitone);
+      const maxFreq = getFreqFromC4Offset(stageMaxSemitone);
+
+      // Crear bloques para cada semitono en el rango
+      for (let s = stageMinSemitone; s <= stageMaxSemitone; s++) {
+        const freq = getFreqFromC4Offset(s);
+        const noteClass = ((s % 12) + 12) % 12;
+        const octave = 4 + Math.floor(s / 12);
+        const noteName = `${noteNames[noteClass]}${octave}`;
+
+        // Posición X en porcentaje (según modo)
+        let pct = 0;
+        if (marioSpacingMode === "log") {
+          // Escala logarítmica real de frecuencias
+          pct = ((Math.log2(freq) - Math.log2(minFreq)) / (Math.log2(maxFreq) - Math.log2(minFreq))) * 84 + 8;
+        } else {
+          // Equidistante
+          pct = ((s - stageMinSemitone) / totalSemitones) * 84 + 8;
+        }
+
+        const block = document.createElement("div");
+        block.id = `mario-block-${s}`;
+        block.className = `mario-block absolute flex flex-col items-center justify-center w-12 sm:w-14 h-14 sm:h-16 rounded-xl border-2 cursor-pointer select-none ${
+          noteNames[noteClass].includes('#') 
+            ? 'bg-zinc-900 border-zinc-700 text-zinc-400' 
+            : 'bg-amber-600/90 border-amber-300 text-white font-bold shadow-lg'
+        }`;
+        block.style.left = `calc(${pct}% - 28px)`;
+        block.style.bottom = "50px";
+
+        block.innerHTML = `
+          <span class="text-xs font-black drop-shadow">${noteName}</span>
+          <span class="text-[10px] font-mono opacity-80 mt-0.5">${freq.toFixed(0)}Hz</span>
+        `;
+
+        block.addEventListener("click", () => {
+          jumpMarioToNote(s);
+          playTone(freq, 0.4);
+        });
+
+        track.appendChild(block);
+      }
+
+      // Colocar a Mario en la primera nota de la canción
+      const firstNote = songsDB[currentSongKey].notes[0].n;
+      positionMarioAtNote(firstNote, false);
+    }
+
+    function positionMarioAtNote(semitoneFromC4, animate = true) {
+      const mario = document.getElementById("marioChar");
+      const block = document.getElementById(`mario-block-${semitoneFromC4}`);
+      if (!block || !mario) return;
+
+      const track = document.getElementById("marioTrack");
+      const trackRect = track.getBoundingClientRect();
+      const blockRect = block.getBoundingClientRect();
+
+      const targetLeft = blockRect.left - trackRect.left + (blockRect.width / 2) - 22;
+      const targetBottom = 115; // Justo sobre el bloque
+
+      mario.style.left = `${targetLeft}px`;
+      mario.style.bottom = `${targetBottom}px`;
+    }
+
+    function jumpMarioToNote(semitoneFromC4) {
+      const mario = document.getElementById("marioChar");
+      const block = document.getElementById(`mario-block-${semitoneFromC4}`);
+      if (!block || !mario) return;
+
+      const track = document.getElementById("marioTrack");
+      const trackRect = track.getBoundingClientRect();
+      const blockRect = block.getBoundingClientRect();
+      const targetLeft = blockRect.left - trackRect.left + (blockRect.width / 2) - 22;
+
+      const currentFreq = getFreqFromC4Offset(semitoneFromC4);
+      const dirBadge = document.getElementById("marioJumpDirection");
+      const deltaBadge = document.getElementById("marioFrequencyDelta");
+
+      // Determinar si SUBE (derecha), BAJA (izquierda) o REPITE
+      if (lastMarioNote !== null) {
+        const prevFreq = getFreqFromC4Offset(lastMarioNote);
+        const deltaHz = currentFreq - prevFreq;
+        const deltaSemi = semitoneFromC4 - lastMarioNote;
+
+        if (deltaSemi > 0) {
+          // SUBE (Hacia la derecha)
+          mario.style.transform = "scaleX(1)"; // Mario mira a la derecha
+          dirBadge.className = "px-3 py-1 rounded-xl text-xs font-extrabold font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/50";
+          dirBadge.innerHTML = `↗ SUBE (+${deltaSemi} semit.) ▶ Hacia la Derecha`;
+          deltaBadge.textContent = `Δf = +${deltaHz.toFixed(1)} Hz (+${((deltaHz/prevFreq)*100).toFixed(1)}%)`;
+        } else if (deltaSemi < 0) {
+          // BAJA (Hacia la izquierda)
+          mario.style.transform = "scaleX(-1)"; // Mario mira a la izquierda (voltear)
+          dirBadge.className = "px-3 py-1 rounded-xl text-xs font-extrabold font-mono bg-rose-500/20 text-rose-300 border border-rose-500/50";
+          dirBadge.innerHTML = `↙ BAJA (${deltaSemi} semit.) ◀ Hacia la Izquierda`;
+          deltaBadge.textContent = `Δf = ${deltaHz.toFixed(1)} Hz (${((deltaHz/prevFreq)*100).toFixed(1)}%)`;
+        } else {
+          // REPITE MISMA NOTA
+          dirBadge.className = "px-3 py-1 rounded-xl text-xs font-extrabold font-mono bg-amber-500/20 text-amber-300 border border-amber-500/50";
+          dirBadge.innerHTML = `● REPITE MISMA NOTA (${currentFreq.toFixed(1)} Hz)`;
+          deltaBadge.textContent = `Δf = 0.0 Hz (Misma frecuencia)`;
+        }
+      } else {
+        dirBadge.className = "px-3 py-1 rounded-xl text-xs font-extrabold font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/50";
+        dirBadge.innerHTML = `▶ Inicio de Melodía`;
+        deltaBadge.textContent = `Frecuencia Inicial: ${currentFreq.toFixed(1)} Hz`;
+      }
+
+      lastMarioNote = semitoneFromC4;
+
+      // Animación del salto parabólico (sube en el aire y aterriza)
+      mario.style.bottom = "165px"; // Elevación de salto
+      mario.style.left = `${targetLeft}px`;
+
+      setTimeout(() => {
+        mario.style.bottom = "115px"; // Aterrizaje
+        block.classList.add("hit");
+        setTimeout(() => block.classList.remove("hit"), 220);
+      }, 180);
+    }
+
     // --- RENDERIZADO DE LA RUEDA GEOMÉTRICA (SVG) ---
     const wheelSvg = document.getElementById("wheelSvg");
 
@@ -703,7 +963,6 @@
       const def = scaleDB[currentScaleKey];
       const activeNotes = getActiveScaleNotes();
 
-      // Círculo exterior decorativo
       const outerCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       outerCircle.setAttribute("cx", cx);
       outerCircle.setAttribute("cy", cy);
@@ -713,7 +972,6 @@
       outerCircle.setAttribute("stroke-width", "3");
       wheelSvg.appendChild(outerCircle);
 
-      // Rayos hacia los 12 semitonos
       for (let i = 0; i < 12; i++) {
         const rad = (i * 30 - 90) * (Math.PI / 180);
         const x2 = cx + r * Math.cos(rad);
@@ -728,7 +986,6 @@
         wheelSvg.appendChild(line);
       }
 
-      // Polígono de la Escala
       const polyCoords = def.pattern.map(offset => {
         const noteIdx = (currentRoot + offset) % 12;
         const rad = (noteIdx * 30 - 90) * (Math.PI / 180);
@@ -748,7 +1005,6 @@
       polygon.setAttribute("class", "scale-poly");
       wheelSvg.appendChild(polygon);
 
-      // 12 Nodos Interactivos
       for (let i = 0; i < 12; i++) {
         const rad = (i * 30 - 90) * (Math.PI / 180);
         const x = cx + r * Math.cos(rad);
@@ -843,7 +1099,6 @@
       document.getElementById("hitoLabel").textContent = def.hitoLabel;
       document.getElementById("hitoText").textContent = def.hitoText;
 
-      // Bitmask
       const activeNotes = getActiveScaleNotes();
       let bits = "";
       for (let i = 0; i < 12; i++) {
@@ -851,7 +1106,6 @@
       }
       document.getElementById("scaleBitmask").textContent = `Bitmask: ${bits}`;
 
-      // Pasos
       document.getElementById("stepIntervalBadge").textContent = def.steps.join(" - ");
       const stepContainer = document.getElementById("stepBadgesContainer");
       stepContainer.innerHTML = "";
@@ -865,7 +1119,6 @@
         stepContainer.appendChild(badge);
       });
 
-      // Teclado Lineal
       const pianoKeys = document.getElementById("pianoKeys");
       pianoKeys.innerHTML = "";
       for (let i = 0; i < 12; i++) {
@@ -889,7 +1142,7 @@
       }
     }
 
-    // --- REPRODUCTOR DE CANCIONES ---
+    // --- REPRODUCTOR DE CANCIONES CON SUPER MARIO ---
     let currentSongKey = "silentNight";
     let isPlayingSong = false;
     let songNoteTimeout = null;
@@ -900,8 +1153,8 @@
       const song = songsDB[currentSongKey];
       const notes = song.notes;
       let noteIdx = 0;
+      lastMarioNote = null;
 
-      // Ajustar escala y raíz según la canción
       currentScaleKey = song.scaleKey;
       currentRoot = song.root;
       renderWheel();
@@ -917,6 +1170,7 @@
           stopTone();
           displayNote.textContent = "Fin";
           displayMeta.textContent = "Melodía completada";
+          document.getElementById("marioJumpDirection").innerHTML = "🏁 Melodía Finalizada";
           return;
         }
 
@@ -924,14 +1178,18 @@
         const semitoneFromC = noteObj.n;
         const durMs = noteObj.d * msPerBeat;
 
-        const noteClass = semitoneFromC % 12;
+        const noteClass = ((semitoneFromC % 12) + 12) % 12;
         const octave = 4 + Math.floor(semitoneFromC / 12);
         const freq = getNoteFrequency(noteClass, octave);
 
+        // Sonido y Rueda
         playTone(freq, (durMs / 1000) * 0.88);
         highlightNode(noteClass);
 
-        displayNote.textContent = noteNames[noteClass];
+        // Salto de Mario
+        jumpMarioToNote(semitoneFromC);
+
+        displayNote.textContent = `${noteNames[noteClass]}${octave}`;
         displayMeta.textContent = `${freq.toFixed(1)} Hz | Duración: ${noteObj.d} tiempos`;
 
         noteIdx++;
@@ -947,6 +1205,9 @@
       stopTone();
       document.getElementById("playingNoteName").textContent = "--";
       document.getElementById("playingNoteMeta").textContent = "Detenido";
+      document.getElementById("marioJumpDirection").innerHTML = "⏸️ En Espera";
+      document.getElementById("marioFrequencyDelta").textContent = "Δf = 0.0 Hz";
+      lastMarioNote = null;
     }
 
     // --- MODO JUEGO: ¿CUÁL NOTA DEBERÍA SEGUIR? ---
@@ -959,36 +1220,36 @@
         scale: "major",
         scaleName: "C Mayor",
         root: 0,
-        seq: [0, 2, 4], // C, D, E
-        answer: 5, // F
-        options: [5, 6, 7, 3], // F, F#, G, D#
+        seq: [0, 2, 4],
+        answer: 5,
+        options: [5, 6, 7, 3],
         hint: "De Mi (E) al siguiente grado de la escala Mayor solo hay un Semitono (+5.95%)."
       },
       {
         scale: "dorian",
         scaleName: "D Dórico",
         root: 2,
-        seq: [2, 4, 5, 7], // D, E, F, G
-        answer: 9, // A (5ª justa)
-        options: [9, 8, 10, 11], // A, G#, Bb, B
-        hint: "El siguiente paso tras Sol (G) es un Tono completo hasta la quinta justa."
+        seq: [2, 4, 5, 7],
+        answer: 9,
+        options: [9, 8, 10, 11],
+        hint: "El siguiente paso tras Sol (G) es un Tono completo hasta la quinta justa (La)."
       },
       {
         scale: "major",
         scaleName: "G Mayor",
         root: 7,
-        seq: [7, 9, 11, 0, 2, 4], // G, A, B, C, D, E
-        answer: 6, // F# (la sensible)
-        options: [6, 5, 7, 8], // F#, F, G, G#
+        seq: [7, 9, 11, 0, 2, 4],
+        answer: 6,
+        options: [6, 5, 7, 8],
         hint: "La escala Mayor necesita la 'sensible' a medio tono de la tónica final: F# a G."
       },
       {
         scale: "minor",
         scaleName: "A Menor",
         root: 9,
-        seq: [9, 11], // A, B
-        answer: 0, // C (3ª menor)
-        options: [0, 1, 2, 8], // C, C#, D, G#
+        seq: [9, 11],
+        answer: 0,
+        options: [0, 1, 2, 8],
         hint: "En el modo menor, el tercer grado está a solo 3 semitonos de la tónica (Do natural, no Do#)."
       }
     ];
@@ -1007,7 +1268,6 @@
       const optsContainer = document.getElementById("gameOptionsContainer");
       optsContainer.innerHTML = "";
 
-      // Desordenar opciones
       const shuffled = [...ch.options].sort(() => Math.random() - 0.5);
 
       shuffled.forEach(opt => {
@@ -1021,7 +1281,6 @@
       document.getElementById("gameFeedback").className = "hidden";
       document.getElementById("btnNextQuestion").classList.add("hidden");
 
-      // Reproducir automáticamente la secuencia
       playChallengeSequence();
     }
 
@@ -1048,7 +1307,6 @@
       const feedback = document.getElementById("gameFeedback");
       feedback.classList.remove("hidden");
 
-      // Desactivar botones de respuesta
       document.querySelectorAll("#gameOptionsContainer button").forEach(b => b.disabled = true);
 
       if (isCorrect) {
@@ -1076,9 +1334,7 @@
       document.getElementById("btnNextQuestion").classList.remove("hidden");
     }
 
-    // --- EVENTOS Y CONTROLES GLOBALES ---
-
-    // Pestañas
+    // --- CONTROLES Y EVENTOS ---
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".tab-btn").forEach(b => {
@@ -1093,7 +1349,25 @@
         if (btn.dataset.tab === "tab-game" && !currentChallenge) {
           loadGameChallenge();
         }
+        if (btn.dataset.tab === "tab-songs") {
+          setTimeout(renderMarioStage, 50);
+        }
       });
+    });
+
+    // Toggle de Espaciado Mario
+    document.getElementById("btnSpacingLog").addEventListener("click", () => {
+      marioSpacingMode = "log";
+      document.getElementById("btnSpacingLog").className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-black shadow-lg shadow-amber-500/20 transition-all";
+      document.getElementById("btnSpacingEqui").className = "px-3.5 py-1.5 rounded-xl text-xs font-bold text-zinc-400 hover:text-white transition-all";
+      renderMarioStage();
+    });
+
+    document.getElementById("btnSpacingEqui").addEventListener("click", () => {
+      marioSpacingMode = "equi";
+      document.getElementById("btnSpacingEqui").className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500 text-black shadow-lg shadow-amber-500/20 transition-all";
+      document.getElementById("btnSpacingLog").className = "px-3.5 py-1.5 rounded-xl text-xs font-bold text-zinc-400 hover:text-white transition-all";
+      renderMarioStage();
     });
 
     // Afinación 440 vs 432
@@ -1103,6 +1377,7 @@
       document.getElementById("btnSet440").className = "px-4 py-2 rounded-xl text-sm font-bold bg-cyan-500 text-black shadow-lg shadow-cyan-500/25 transition-all";
       document.getElementById("btnSet432").className = "px-4 py-2 rounded-xl text-sm font-bold text-zinc-400 bg-zinc-800/80 hover:text-white transition-all";
       updateDetails();
+      renderMarioStage();
     });
 
     document.getElementById("btnSet432").addEventListener("click", () => {
@@ -1111,6 +1386,7 @@
       document.getElementById("btnSet432").className = "px-4 py-2 rounded-xl text-sm font-bold bg-cyan-500 text-black shadow-lg shadow-cyan-500/25 transition-all";
       document.getElementById("btnSet440").className = "px-4 py-2 rounded-xl text-sm font-bold text-zinc-400 bg-zinc-800/80 hover:text-white transition-all";
       updateDetails();
+      renderMarioStage();
     });
 
     // Selectores de Modo
@@ -1126,14 +1402,13 @@
       });
     });
 
-    // Selector de Raíz
     document.getElementById("rootPicker").addEventListener("change", (e) => {
       currentRoot = parseInt(e.target.value, 10);
       renderWheel();
       updateDetails();
     });
 
-    // Arpegiar Escala Completa
+    // Arpegio de Escala
     document.getElementById("btnPlayScaleSweep").addEventListener("click", () => {
       if (isPlayingSequence) return;
       isPlayingSequence = true;
@@ -1160,7 +1435,7 @@
       step();
     });
 
-    // Selección y Reproducción de Canciones
+    // Selección de Canción
     document.querySelectorAll(".song-card").forEach(card => {
       card.addEventListener("click", () => {
         document.querySelectorAll(".song-card").forEach(c => {
@@ -1171,20 +1446,20 @@
         const song = songsDB[currentSongKey];
         document.getElementById("currentSongTitle").textContent = song.title;
         document.getElementById("currentSongScaleLabel").textContent = `Modo/Escala: ${scaleDB[song.scaleKey].name} en ${noteNames[song.root]}`;
+        renderMarioStage();
       });
     });
 
     document.getElementById("btnPlaySong").addEventListener("click", playSong);
     document.getElementById("btnStopSong").addEventListener("click", stopSong);
 
-    // Controles del Juego
+    // Minijuego
     document.getElementById("btnHearSequence").addEventListener("click", playChallengeSequence);
     document.getElementById("btnNextQuestion").addEventListener("click", () => {
       challengeIdx++;
       loadGameChallenge();
     });
 
-    // Función de descarga del HTML para el usuario
     function downloadSelf() {
       const blob = new Blob([document.documentElement.outerHTML], { type: "text/html;charset=utf-8" });
       const a = document.createElement("a");
@@ -1193,9 +1468,10 @@
       a.click();
     }
 
-    // Inicialización al cargar
+    // Inicialización
     renderWheel();
     updateDetails();
+    renderMarioStage();
   </script>
 </body>
 </html>
