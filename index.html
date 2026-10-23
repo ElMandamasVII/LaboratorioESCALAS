@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorio de Frecuencias y Geometría Musical | Primeros Principios</title>
+  <!-- Tailwind CSS -->
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --bg: #090a0f;
+      --card: #13151f;
+      --card-border: #222638;
+      --cyan: #06b6d4;
+      --purple: #a855f7;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+    }
+    body {
+      background-color: var(--bg);
+      color: #f1f5f9;
+      font-size: 16px; /* 20% más grande que el tamaño estándar */
+      line-height: 1.6;
+    }
+    .neon-glow-cyan {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
+    }
+    .neon-glow-purple {
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.25);
+    }
+    .scale-poly {
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    /* Estilos personalizados para scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0d0f17;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2a3047;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3b4466;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-3 md:p-6 antialiased selection:bg-cyan-500 selection:text-black">
+
+  <div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- HEADER PRINCIPAL -->
+    <header class="bg-[#13151f]/90 border border-[#222638] rounded-3xl p-6 md:p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+      <div class="absolute -right-20 -top-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+        <div>
+          <div class="flex flex-wrap items-center gap-3 mb-2">
+            <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+              Acústica • Geometría • Algoritmos
+            </span>
+            <span class="px-3 py-1 rounded-full text-xs font-mono bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              Primeros Principios
+            </span>
+          </div>
+          <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+            Laboratorio de <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-rose-400">Escalas y Frecuencias</span>
+          </h1>
+          <p class="text-zinc-400 text-base md:text-lg mt-2 max-w-2xl">
+            Aprende por qué la música es un círculo cerrado de 12 horas logarítmicas, cómo cada escala es un polígono geométrico invariable y cómo las canciones saltan de nota en nota.
+          </p>
+        </div>
+
+        <!-- AFINACIÓN Y ACCESO RÁPIDO -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-[#0d0f17] border border-[#222638] p-3 rounded-2xl">
+          <div class="text-center sm:text-left px-2">
+            <span class="text-xs uppercase text-zinc-400 font-bold block">Afinación Base:</span>
+            <span id="currentA4Label" class="text-sm font-mono text-cyan-400 font-semibold">A4 = 440.0 Hz</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btnSet440" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-sm font-bold bg-cyan-500 text-black shadow-lg shadow-cyan-500/25 transition-all">
+              440 Hz (ISO)
+            </button>
+            <button id="btnSet432" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-sm font-bold text-zinc-400 bg-zinc-800/80 hover:text-white transition-all">
+              432 Hz (Verdi)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAVEGACIÓN POR PESTAÑAS -->
+      <nav class="flex flex-wrap items-center gap-2 mt-6 pt-5 border-t border-[#222638]">
+        <button data-tab="tab-explorer" class="tab-btn active px-5 py-2.5 rounded-xl text-base font-bold bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 transition-all">
+          1. Explorador Geométrico & Modos
+        </button>
+        <button data-tab="tab-songs" class="tab-btn px-5 py-2.5 rounded-xl text-base font-bold text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-all">
+          2. Canciones & Villancicos en Vivo
+        </button>
+        <button data-tab="tab-game" class="tab-btn px-5 py-2.5 rounded-xl text-base font-bold text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-all flex items-center gap-2">
+          <span>3. Juego: ¿Qué nota sigue?</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- PESTAÑA 1: EXPLORADOR GEOMÉTRICO & MODOS -->
+    <!-- ========================================== -->
+    <section id="tab-explorer" class="tab-content space-y-6">
+      
+      <!-- Selectores de Escalas y Modos -->
+      <div class="bg-[#13151f] border border-[#222638] rounded-2xl p-5 shadow-xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+          <div>
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>Elige una Escala o Modo Histórico</span>
+              <span id="scaleBitmask" class="text-xs font-mono px-2.5 py-1 bg-purple-950/60 text-purple-300 border border-purple-800/50 rounded-lg">Bitmask: 101011010101</span>
+            </h2>
+            <p class="text-sm text-zinc-400">Cada escala crea una forma geométrica distinta. Haz clic para mutar el polígono.</p>
+          </div>
+
+          <!-- Selector de Tónica (Rotación) -->
+          <div class="flex items-center gap-3 bg-[#0d0f17] p-2 rounded-xl border border-[#222638]">
+            <label class="text-sm font-semibold text-zinc-400">Tónica (Centro):</label>
+            <select id="rootPicker" class="bg-zinc-800 border border-zinc-700 text-sm font-bold text-cyan-300 rounded-lg px-3 py-1.5 focus:outline-none">
+              <option value="0">C (Do)</option>
+              <option value="1">C# / Db</option>
+              <option value="2" selected>D (Re - Clásico Dórico)</option>
+              <option value="3">D# / Eb</option>
+              <option value="4">E (Mi)</option>
+              <option value="5">F (Fa)</option>
+              <option value="6">F# / Gb</option>
+              <option value="7">G (Sol)</option>
+              <option value="8">G# / Ab</option>
+              <option value="9">A (La - 440 Hz)</option>
+              <option value="10">A# / Bb</option>
+              <option value="11">B (Si)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Botones de Escala -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <button data-scale="dorian" class="scale-selector active p-3 rounded-xl border border-cyan-500 bg-cyan-500/20 text-cyan-300 text-left transition-all">
+            <div class="font-bold text-base">Dórico</div>
+            <div class="text-xs text-zinc-300 mt-1">El guerrero noble</div>
+            <div class="text-[11px] text-zinc-400 font-mono mt-0.5">Greensleeves • Miles Davis</div>
+          </button>
+
+          <button data-scale="major" class="scale-selector p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:border-zinc-700 text-left transition-all">
+            <div class="font-bold text-base">Mayor (Jónico)</div>
+            <div class="text-xs text-zinc-400 mt-1">Claridad y triunfo</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Villancicos • Alegría</div>
+          </button>
+
+          <button data-scale="minor" class="scale-selector p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:border-zinc-700 text-left transition-all">
+            <div class="font-bold text-base">Menor (Eólico)</div>
+            <div class="text-xs text-zinc-400 mt-1">Introspección y pesar</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Baladas • Dramatismo</div>
+          </button>
+
+          <button data-scale="lydian" class="scale-selector p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:border-zinc-700 text-left transition-all">
+            <div class="font-bold text-base">Lidio</div>
+            <div class="text-xs text-zinc-400 mt-1">El brillo cósmico</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">4ª Aumentada • Sci-Fi</div>
+          </button>
+
+          <button data-scale="mixolydian" class="scale-selector p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:border-zinc-700 text-left transition-all">
+            <div class="font-bold text-base">Mixolidio</div>
+            <div class="text-xs text-zinc-400 mt-1">Alma del Blues/Rock</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">Beatles • Folk Celta</div>
+          </button>
+
+          <button data-scale="phrygian" class="scale-selector p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:border-zinc-700 text-left transition-all">
+            <div class="font-bold text-base">Frigio</div>
+            <div class="text-xs text-zinc-400 mt-1">Tensión Flamenca</div>
+            <div class="text-[11px] text-zinc-500 font-mono mt-0.5">2ª menor • Andalucía</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ZONA CENTRAL: RUEDA GEOMÉTRICA + HISTORIA E HITOS -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- RUEDA SVG INTERACTIVA (7 columnas) -->
+        <div class="lg:col-span-7 bg-[#13151f] border border-[#222638] rounded-3xl p-6 shadow-xl flex flex-col items-center relative overflow-hidden">
+          <div class="w-full flex items-center justify-between mb-2">
+            <span class="text-xs uppercase font-bold text-zinc-400 tracking-wider">Círculo de Semitonos (Pitch-Class Clock)</span>
+            <button id="btnPlayScaleSweep" class="px-3.5 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-bold flex items-center gap-1.5 shadow-md transition-all">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Arpegiar Escala
+            </button>
+          </div>
+
+          <!-- Lienzo SVG -->
+          <div class="relative w-80 h-80 sm:w-96 sm:h-96 flex items-center justify-center my-2">
+            <svg id="wheelSvg" class="w-full h-full" viewBox="0 0 380 380"></svg>
+            
+            <!-- Centro con información de la nota -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+              <span id="centerNoteDisplay" class="text-4xl font-extrabold text-cyan-400">--</span>
+              <span id="centerHzDisplay" class="text-sm font-mono text-zinc-300 mt-1">Toca o pasa el cursor</span>
+              <span id="centerRatioDisplay" class="text-xs font-mono text-purple-400 font-bold mt-1">--</span>
+            </div>
+          </div>
+
+          <!-- Leyenda -->
+          <div class="flex flex-wrap items-center justify-center gap-4 text-xs text-zinc-400 mt-2">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-purple-500 ring-2 ring-purple-300"></span> Tónica</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-cyan-400"></span> Notas de la Escala</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-zinc-800 border border-zinc-700"></span> Notas Excluidas</span>
+          </div>
+        </div>
+
+        <!-- HISTORIA PROFUNDA, HITOS Y FÍSICA (5 columnas) -->
+        <div class="lg:col-span-5 space-y-4">
+          
+          <!-- Tarjeta de Historia e Hitos -->
+          <div class="bg-[#13151f] border border-[#222638] rounded-3xl p-6 shadow-xl relative overflow-hidden">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-xs font-mono uppercase px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                Historia & Hitos
+              </span>
+              <span id="modeNameTag" class="text-sm font-bold text-white">Modo Dórico</span>
+            </div>
+            
+            <h3 id="modeTitle" class="text-xl font-bold text-white mb-2">El Modo del Guerrero Griego y el Renacimiento</h3>
+            
+            <div id="modeHistoryText" class="text-zinc-300 text-sm leading-relaxed space-y-2">
+              <!-- Inyectado por JS -->
+            </div>
+
+            <!-- Hito Destacado -->
+            <div class="mt-4 p-3.5 bg-[#0d0f17] border border-amber-500/30 rounded-2xl flex items-start gap-3">
+              <span class="text-2xl">🏛️</span>
+              <div>
+                <span class="text-xs font-bold uppercase text-amber-400 block" id="hitoLabel">Hito Histórico</span>
+                <p class="text-xs text-zinc-300 mt-0.5" id="hitoText">
+                  Platón en "La República" lo elogió como el único modo capaz de inspirar coraje y templanza en los soldados espartanos y atenienses.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta de Fórmula del Salto -->
+          <div class="bg-[#13151f] border border-[#222638] rounded-3xl p-5 shadow-xl space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs uppercase font-bold text-zinc-400">Patrón de Saltos Físicos</span>
+              <span id="stepIntervalBadge" class="text-xs font-mono font-bold text-cyan-400 bg-cyan-950/60 px-2.5 py-1 rounded-lg border border-cyan-800">
+                T - S - T - T - T - S - T
+              </span>
+            </div>
+            <div id="stepBadgesContainer" class="flex gap-1.5">
+              <!-- Badges Tono / Semitono -->
+            </div>
+            <div class="text-xs text-zinc-400 font-mono flex justify-between pt-1">
+              <span>Tono (T) = × 1.1225 (+12.2%)</span>
+              <span>Semitono (S) = × 1.0595 (+5.95%)</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TECLADO LINEAL INFERIOR -->
+      <div class="bg-[#13151f] border border-[#222638] rounded-2xl p-4 shadow-xl">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase text-zinc-400">Proyección Lineal sobre el Teclado</span>
+          <span class="text-xs font-mono text-zinc-500">Pasa el mouse o haz clic en cualquier tecla</span>
+        </div>
+        <div id="pianoKeys" class="grid grid-cols-12 gap-1.5">
+          <!-- Teclas dinámicas -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PESTAÑA 2: CANCIONES & VILLANCICOS EN VIVO -->
+    <!-- ========================================== -->
+    <section id="tab-songs" class="tab-content hidden space-y-6">
+      <div class="bg-[#13151f] border border-[#222638] rounded-3xl p-6 shadow-xl">
+        <div class="max-w-2xl">
+          <h2 class="text-2xl font-bold text-white mb-1">Canciones Populares y Villancicos: La Escala en Acción</h2>
+          <p class="text-zinc-400 text-sm">
+            Selecciona una melodía tradicional y mira cómo la rueda de semitonos "dibuja" la canción en tiempo real. Observa cómo cada canción habita rigurosamente dentro de su polígono.
+          </p>
+        </div>
+
+        <!-- Selector de Canciones -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <button data-song="silentNight" class="song-card active p-4 rounded-2xl border border-cyan-500 bg-cyan-500/10 text-left transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-cyan-400 font-bold uppercase">Villancico Clásico</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-cyan-950 text-cyan-300">Escala Mayor</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mt-2">Noche de Paz (Silent Night)</h3>
+            <p class="text-xs text-zinc-400 mt-1">Franz Xaver Gruber (1818). Movimientos suaves por grados conjuntos y saltos de 5ª y 3ª.</p>
+          </button>
+
+          <button data-song="jingleBells" class="song-card p-4 rounded-2xl border border-zinc-800 bg-zinc-900/60 text-left hover:border-zinc-700 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-amber-400 font-bold uppercase">Navidad Popular</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-amber-950 text-amber-300">Escala Mayor</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mt-2">Jingle Bells (Cascabel)</h3>
+            <p class="text-xs text-zinc-400 mt-1">James Pierpont (1857). El estribillo es el ejemplo perfecto de insistencia en la 3ª mayor.</p>
+          </button>
+
+          <button data-song="greensleeves" class="song-card p-4 rounded-2xl border border-zinc-800 bg-zinc-900/60 text-left hover:border-zinc-700 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-purple-400 font-bold uppercase">Melodía Renacentista</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-purple-950 text-purple-300">Modo Dórico Puro</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mt-2">Greensleeves (Siglo XVI)</h3>
+            <p class="text-xs text-zinc-400 mt-1">La melodía más famosa del modo Dórico. Su 6ª mayor crea ese toque nostálgico medieval.</p>
+          </button>
+
+          <button data-song="odeToJoy" class="song-card p-4 rounded-2xl border border-zinc-800 bg-zinc-900/60 text-left hover:border-zinc-700 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-emerald-400 font-bold uppercase">Clásico Universal</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-emerald-950 text-emerald-300">Escala Mayor</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mt-2">Himno a la Alegría (Beethoven)</h3>
+            <p class="text-xs text-zinc-400 mt-1">9ª Sinfonía. Una marcha paso a paso (T-T-S) que demuestra la lógica del algoritmo diatónico.</p>
+          </button>
+
+          <button data-song="twinkle" class="song-card p-4 rounded-2xl border border-zinc-800 bg-zinc-900/60 text-left hover:border-zinc-700 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-rose-400 font-bold uppercase">Canción Infantil / Mozart</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-rose-950 text-rose-300">Salto de Quinta 3:2</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mt-2">Estrellita, ¿Dónde Estás?</h3>
+            <p class="text-xs text-zinc-400 mt-1">Comienza con un salto directo de la tónica a la 5ª justa (Do a Sol), la razón pura 3/2.</p>
+          </button>
+
+          <button data-song="smokeOnWater" class="song-card p-4 rounded-2xl border border-zinc-800 bg-zinc-900/60 text-left hover:border-zinc-700 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-indigo-400 font-bold uppercase">Rock Clásico</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-indigo-950 text-indigo-300">Pentatónica & Blues</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mt-2">Riff de Rock (Smoke on Water)</h3>
+            <p class="text-xs text-zinc-400 mt-1">Deep Purple. Basado en la pentatónica menor con la blue note (el tritono discordante).</p>
+          </button>
+        </div>
+
+        <!-- REPRODUCTOR EN VIVO DE LA CANCIÓN -->
+        <div class="mt-8 bg-[#0d0f17] border border-[#222638] rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <span class="text-xs uppercase font-bold text-zinc-400 block">Canción Seleccionada:</span>
+            <h3 id="currentSongTitle" class="text-xl font-extrabold text-cyan-300 mt-0.5">Noche de Paz (Silent Night)</h3>
+            <p id="currentSongScaleLabel" class="text-xs text-zinc-400 font-mono mt-1">Escala activa: C Mayor (Jónica)</p>
+          </div>
+
+          <!-- Controles de Reproducción -->
+          <div class="flex items-center gap-3">
+            <button id="btnPlaySong" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black font-extrabold text-base flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Reproducir Melodía
+            </button>
+            <button id="btnStopSong" class="px-5 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-base transition-all">
+              Detener
+            </button>
+          </div>
+        </div>
+
+        <!-- Partitura Gráfica / Nota en Curso -->
+        <div class="mt-6 bg-[#0d0f17] border border-[#222638] rounded-2xl p-4 text-center">
+          <span class="text-xs text-zinc-500 uppercase tracking-widest font-mono block">Nota en Reproducción</span>
+          <div id="playingNoteName" class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 my-2">--</div>
+          <div id="playingNoteMeta" class="text-sm font-mono text-zinc-400">Presiona "Reproducir Melodía" para comenzar</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PESTAÑA 3: MINIJUEGO: ¿QUÉ NOTA SIGUE?     -->
+    <!-- ========================================== -->
+    <section id="tab-game" class="tab-content hidden space-y-6">
+      <div class="bg-[#13151f] border border-[#222638] rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden">
+        
+        <!-- Encabezado del Juego -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-[#222638] gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Desafío de Oído y Lógica</span>
+              <span class="text-xs text-zinc-400">Entrenamiento de Primeros Principios</span>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-1">¿Cuál Nota Debería Seguir?</h2>
+            <p class="text-sm text-zinc-400 mt-1">
+              Pon a prueba tu intuición física y armonía. La máquina te tocará una secuencia de la escala y deberás deducir qué nota completa el salto correcto.
+            </p>
+          </div>
+
+          <!-- Marcador de Puntos -->
+          <div class="flex items-center gap-4 bg-[#0d0f17] border border-[#222638] p-3 rounded-2xl">
+            <div class="text-center px-2">
+              <span class="text-xs uppercase text-zinc-500 font-bold block">Puntos</span>
+              <span id="gameScore" class="text-2xl font-black text-emerald-400 font-mono">0</span>
+            </div>
+            <div class="w-px h-8 bg-zinc-800"></div>
+            <div class="text-center px-2">
+              <span class="text-xs uppercase text-zinc-500 font-bold block">Racha</span>
+              <span id="gameStreak" class="text-2xl font-black text-amber-400 font-mono">0 🔥</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Área Principal de la Pregunta -->
+        <div class="my-6 bg-[#0d0f17] border border-[#222638] rounded-2xl p-6 text-center space-y-4">
+          <div class="inline-block px-3 py-1 rounded-full text-xs font-mono bg-zinc-800 text-zinc-300" id="gameScaleContext">
+            Escala actual: C Mayor (Jónica)
+          </div>
+
+          <div>
+            <p class="text-lg md:text-xl font-bold text-white" id="gameQuestionText">
+              Escucha la secuencia: Do &rarr; Re &rarr; Mi... ¿Cuál es la siguiente nota de la escala?
+            </p>
+            <p class="text-xs text-zinc-400 mt-1" id="gameHint">
+              Pista: Recuerda el patrón de saltos (T-T-S-T-T-T-S). De Mi a Fa solo hay un semitono (+5.95%).
+            </p>
+          </div>
+
+          <!-- Botón para volver a escuchar la secuencia -->
+          <button id="btnHearSequence" class="px-5 py-2.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 text-cyan-300 text-sm font-bold inline-flex items-center gap-2 transition-all">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Volver a Escuchar Secuencia
+          </button>
+
+          <!-- Opciones de Respuesta -->
+          <div id="gameOptionsContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-xl mx-auto pt-4">
+            <!-- Botones inyectados por JS -->
+          </div>
+
+          <!-- Mensaje de Feedback -->
+          <div id="gameFeedback" class="hidden p-4 rounded-xl text-sm font-medium transition-all max-w-xl mx-auto">
+            <!-- Inyectado por JS -->
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button id="btnNextQuestion" class="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-sm transition-all hidden">
+            Siguiente Desafío &rarr;
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER / CÓMO SUBIR ESTA PÁGINA A LA WEB -->
+    <footer class="bg-[#13151f] border border-[#222638] rounded-2xl p-5 text-sm text-zinc-400 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <span class="font-bold text-white block">🚀 Cómo publicar esta web gratis y compartir tu link:</span>
+        <span>Guarda este archivo como <code class="text-cyan-400 font-mono">index.html</code> y súbelo a <strong>GitHub Pages</strong>, <strong>Vercel</strong> o <strong>Netlify</strong> (Drop & Deploy sin costo).</span>
+      </div>
+      <button onclick="downloadSelf()" class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs flex items-center gap-1.5 transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Descargar este HTML
+      </button>
+    </footer>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SCRIPT COMPLETO DE LÓGICA, AUDIO Y JUEGO   -->
+  <!-- ========================================== -->
+  <script>
+    // --- ESTADO GLOBAL ---
+    let baseA4 = 440.0;
+    let currentRoot = 2; // D (Re) por defecto para que Dórico brille
+    let currentScaleKey = "dorian";
+    let audioCtx = null;
+    let osc = null;
+    let gainNode = null;
+    let activeFreq = null;
+    let isPlayingSequence = false;
+    let sequenceTimeout = null;
+
+    const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    
+    // Frecuencias base en función de A4
+    function getNoteFrequency(noteIndex, octave = 4) {
+      // noteIndex: 0=C, 1=C#... 9=A
+      // semitones respecto a A4: noteIndex - 9 + (octave - 4) * 12
+      const semitonesFromA4 = (noteIndex - 9) + (octave - 4) * 12;
+      return baseA4 * Math.pow(2, semitonesFromA4 / 12);
+    }
+
+    // --- BASE DE DATOS DE ESCALAS Y MODOS CON HISTORIA ---
+    const scaleDB = {
+      dorian: {
+        name: "Modo Dórico",
+        pattern: [0, 2, 3, 5, 7, 9, 10], // D-E-F-G-A-B-C
+        steps: ["T", "S", "T", "T", "T", "S", "T"],
+        title: "El Modo del Guerrero Griego y el Renacimiento",
+        history: `
+          <p>En la Grecia clásica, los <strong>Dorios</strong> eran una de las cuatro grandes tribus helénicas (famosos por Esparta). Su modo musical era considerado el más sobrio, marcial y ético de todos.</p>
+          <p class="mt-2">A diferencia de la escala menor moderna (que tiene una sexta menor melancólica), el Dórico tiene una <strong>6ª Mayor</strong> (en Re Dórico es Si natural). Este intervalo le confiere un color noble, místico y heroico.</p>
+          <p class="mt-2">Fue la escala favorita de la época renacentista y medieval (como en <em>Greensleeves</em>) y renació en el siglo XX con el Jazz modal en el legendario álbum <em>Kind of Blue</em> de <strong>Miles Davis</strong> ("So What").</p>
+        `,
+        hitoLabel: "Platón & Esparta",
+        hitoText: "En 'La República', Platón recomendaba únicamente los modos Dórico y Frigio para la educación de los gobernantes y guerreros, prohibiendo los modos 'laxos'."
+      },
+      major: {
+        name: "Mayor (Modo Jónico)",
+        pattern: [0, 2, 4, 5, 7, 9, 11],
+        steps: ["T", "T", "S", "T", "T", "T", "S"],
+        title: "La Reina de la Música Occidental y la Ilustración",
+        history: `
+          <p>Durante la Edad Media, la iglesia consideraba el modo Jónico demasiado 'terrenal' y festivo, llamándolo a veces <em>Modus Lascivus</em> (el modo licencioso). Sin embargo, con el nacimiento del Barroco y la física acústica en el siglo XVII, se convirtió en el pilar de toda la música occidental.</p>
+          <p class="mt-2">Su física es perfecta: la tríada Do-Mi-Sol corresponde a los armónicos 4, 5 y 6 de la cuerda vibrante, produciendo la máxima consonancia acústica en el oído humano.</p>
+        `,
+        hitoLabel: "Villancicos y Bach",
+        hitoText: "Es la escala sobre la que se construyeron los villancicos universales (Noche de Paz, Jingle Bells) y el Himno a la Alegría de Beethoven."
+      },
+      minor: {
+        name: "Menor Natural (Modo Eólico)",
+        pattern: [0, 2, 3, 5, 7, 8, 10],
+        steps: ["T", "S", "T", "T", "S", "T", "T"],
+        title: "La Melancolía Romántica y el Reflejo Especular",
+        history: `
+          <p>El modo Eólico proviene de la región griega de Eolia. Es el negativo fotográfico de la escala mayor: mientras la escala mayor asciende con alegría, la escala menor desciende con introspección.</p>
+          <p class="mt-2">Su característica fundamental es la <strong>3ª menor</strong> (un salto de 3 semitonos en vez de 4), que genera una tensión acústica suave que el cerebro asocia a la calma, la tristeza o el drama profundo.</p>
+        `,
+        hitoLabel: "Baladas y Chopin",
+        hitoText: "Base fundamental de los nocturnos románticos de Chopin, el folklore eslavo y las grandes baladas del rock moderno."
+      },
+      lydian: {
+        name: "Modo Lidio",
+        pattern: [0, 2, 4, 6, 7, 9, 11],
+        steps: ["T", "T", "T", "S", "T", "T", "S"],
+        title: "El Brillo Cósmico y la 4ª Aumentada",
+        history: `
+          <p>El modo Lidio eleva el cuarto grado con un semitono adicional (en Do Lidio es Fa#). Este intervalo de tres tonos enteros consecutivos (el célebre <strong>tritono</strong>) fue llamado en el medioevo <em>Diabolus in Musica</em> por su tensión cósmica.</p>
+          <p class="mt-2">En el cine moderno, compositores como <strong>John Williams</strong> lo usan constantemente para evocar magia extraterrestre (el tema de <em>E.T.</em>) y maravilla en el espacio sideral.</p>
+        `,
+        hitoLabel: "Hollywood & Magia",
+        hitoText: "La intro de 'Los Simpson' de Danny Elfman y la banda sonora de 'Volver al Futuro' utilizan el modo Lidio para crear asombro inmediato."
+      },
+      mixolydian: {
+        name: "Modo Mixolidio",
+        pattern: [0, 2, 4, 5, 7, 9, 10],
+        steps: ["T", "T", "S", "T", "T", "S", "T"],
+        title: "El Alma del Blues, el Rock Clásico y las Gaitas",
+        history: `
+          <p>El Mixolidio es idéntico a la escala mayor pero con su <strong>séptima rebajada</strong> un semitono. Esto le quita la gravedad rígida del final de la escala y le otorga un aire despreocupado y alegre.</p>
+          <p class="mt-2">Es el modo por excelencia de las gaitas de las Tierras Altas de Escocia, del rock sureño y de himnos como <em>Sweet Child O' Mine</em> de Guns N' Roses o <em>Norwegian Wood</em> de The Beatles.</p>
+        `,
+        hitoLabel: "Beatles & Rock",
+        hitoText: "Los Beatles utilizaron el modo Mixolidio para revolucionar la música pop, alejándose de los patrones clásicos de la música de radio de los 50."
+      },
+      phrygian: {
+        name: "Modo Frigio",
+        pattern: [0, 1, 3, 5, 7, 8, 10],
+        steps: ["S", "T", "T", "T", "S", "T", "T"],
+        title: "La Fuerza Flamenca y el Misterio de Oriente",
+        history: `
+          <p>El modo Frigio arranca de inmediato con un <strong>semitono implacable</strong> (de Do a Reb). Este comienzo de fricción acústica le da una tensión inmediata y dramática.</p>
+          <p class="mt-2">Es la raíz innegable de la música tradicional de Andalucía, el cante jondo flamenco, la música sefardí y el heavy metal (Metallica, Iron Maiden) cuando buscan evocar batallas antiguas.</p>
+        `,
+        hitoLabel: "Flamenco & Metal",
+        hitoText: "En la España medieval convivieron las tradiciones árabes, judías y cristianas, fusionándose en la cadencia frigia que define el arte flamenco."
+      }
+    };
+
+    // --- REPERTORIO DE MELODÍAS (CANCIÓN -> NOTAS Y DURACIONES) ---
+    // offset: semitonos respecto a C4, dur: duración relativa
+    const songsDB = {
+      silentNight: {
+        title: "Noche de Paz (Silent Night)",
+        scaleKey: "major",
+        root: 0, // C
+        bpm: 90,
+        notes: [
+          { n: 7, d: 1.5 }, { n: 9, d: 0.5 }, { n: 7, d: 1 }, { n: 4, d: 2 }, // Sol La Sol Mi
+          { n: 7, d: 1.5 }, { n: 9, d: 0.5 }, { n: 7, d: 1 }, { n: 4, d: 2 }, // Sol La Sol Mi
+          { n: 14, d: 2 }, { n: 14, d: 1 }, { n: 11, d: 2 },                  // Re' Re' Si
+          { n: 12, d: 2 }, { n: 12, d: 1 }, { n: 7, d: 2 }                    // Do' Do' Sol
+        ]
+      },
+      jingleBells: {
+        title: "Jingle Bells (Navidad)",
+        scaleKey: "major",
+        root: 0,
+        bpm: 130,
+        notes: [
+          { n: 4, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 2 }, // Mi Mi Mi
+          { n: 4, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 2 }, // Mi Mi Mi
+          { n: 4, d: 1 }, { n: 7, d: 1 }, { n: 0, d: 1.5 }, { n: 2, d: 0.5 }, { n: 4, d: 3 }, // Mi Sol Do Re Mi
+          { n: 5, d: 1 }, { n: 5, d: 1 }, { n: 5, d: 1.5 }, { n: 5, d: 0.5 }, { n: 5, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 2 } // Fa Fa Fa Fa Fa Mi Mi
+        ]
+      },
+      greensleeves: {
+        title: "Greensleeves (Siglo XVI)",
+        scaleKey: "dorian",
+        root: 2, // Re Dórico
+        bpm: 100,
+        notes: [
+          { n: 2, d: 1 },  // Re
+          { n: 5, d: 2 },  // Fa
+          { n: 7, d: 1 },  // Sol
+          { n: 9, d: 1.5 }, { n: 10, d: 0.5 }, { n: 9, d: 1 }, // La Sib La
+          { n: 7, d: 2 }, { n: 4, d: 1 },                      // Sol Mi
+          { n: 0, d: 1.5 }, { n: 2, d: 0.5 }, { n: 4, d: 1 }, // Do Re Mi
+          { n: 5, d: 2 }, { n: 2, d: 1 },                      // Fa Re
+          { n: 2, d: 2 }                                       // Re
+        ]
+      },
+      odeToJoy: {
+        title: "Himno a la Alegría (Beethoven)",
+        scaleKey: "major",
+        root: 0,
+        bpm: 115,
+        notes: [
+          { n: 4, d: 1 }, { n: 4, d: 1 }, { n: 5, d: 1 }, { n: 7, d: 1 }, // Mi Mi Fa Sol
+          { n: 7, d: 1 }, { n: 5, d: 1 }, { n: 4, d: 1 }, { n: 2, d: 1 }, // Sol Fa Mi Re
+          { n: 0, d: 1 }, { n: 0, d: 1 }, { n: 2, d: 1 }, { n: 4, d: 1 }, // Do Do Re Mi
+          { n: 4, d: 1.5 }, { n: 2, d: 0.5 }, { n: 2, d: 2 }              // Mi Re Re
+        ]
+      },
+      twinkle: {
+        title: "Estrellita, ¿Dónde Estás?",
+        scaleKey: "major",
+        root: 0,
+        bpm: 105,
+        notes: [
+          { n: 0, d: 1 }, { n: 0, d: 1 }, { n: 7, d: 1 }, { n: 7, d: 1 }, // Do Do Sol Sol (Salto de 5ª)
+          { n: 9, d: 1 }, { n: 9, d: 1 }, { n: 7, d: 2 },                 // La La Sol
+          { n: 5, d: 1 }, { n: 5, d: 1 }, { n: 4, d: 1 }, { n: 4, d: 1 }, // Fa Fa Mi Mi
+          { n: 2, d: 1 }, { n: 2, d: 1 }, { n: 0, d: 2 }                  // Re Re Do
+        ]
+      },
+      smokeOnWater: {
+        title: "Riff de Rock (Smoke on Water)",
+        scaleKey: "dorian",
+        root: 2, // Re
+        bpm: 110,
+        notes: [
+          { n: 2, d: 1 }, { n: 5, d: 1 }, { n: 7, d: 1.5 }, // Re Fa Sol
+          { n: 2, d: 1 }, { n: 5, d: 1 }, { n: 8, d: 0.5 }, { n: 7, d: 2 }, // Re Fa Lab Sol (Blue note!)
+          { n: 2, d: 1 }, { n: 5, d: 1 }, { n: 7, d: 1.5 }, // Re Fa Sol
+          { n: 5, d: 1 }, { n: 2, d: 2 }                    // Fa Re
+        ]
+      }
+    };
+
+    // --- SÍNTESIS DE AUDIO (WEB AUDIO API) ---
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        gainNode = audioCtx.createGain();
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+        gainNode.connect(audioCtx.destination);
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playTone(freq, duration = 0) {
+      initAudio();
+      if (!osc) {
+        osc = audioCtx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.connect(gainNode);
+        osc.start();
+      } else {
+        osc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.012);
+      }
+      gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+      gainNode.gain.setTargetAtTime(0.28, audioCtx.currentTime, 0.015);
+
+      if (duration > 0) {
+        gainNode.gain.setTargetAtTime(0, audioCtx.currentTime + duration, 0.04);
+      }
+    }
+
+    function stopTone() {
+      if (gainNode && audioCtx) {
+        gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+        gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.02);
+      }
+      highlightNode(null);
+    }
+
+    // --- RENDERIZADO DE LA RUEDA GEOMÉTRICA (SVG) ---
+    const wheelSvg = document.getElementById("wheelSvg");
+
+    function getActiveScaleNotes() {
+      const def = scaleDB[currentScaleKey];
+      return def.pattern.map(offset => (currentRoot + offset) % 12);
+    }
+
+    function renderWheel() {
+      wheelSvg.innerHTML = "";
+      const cx = 190, cy = 190, r = 140;
+      const def = scaleDB[currentScaleKey];
+      const activeNotes = getActiveScaleNotes();
+
+      // Círculo exterior decorativo
+      const outerCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      outerCircle.setAttribute("cx", cx);
+      outerCircle.setAttribute("cy", cy);
+      outerCircle.setAttribute("r", r);
+      outerCircle.setAttribute("fill", "rgba(10, 12, 20, 0.7)");
+      outerCircle.setAttribute("stroke", "#222638");
+      outerCircle.setAttribute("stroke-width", "3");
+      wheelSvg.appendChild(outerCircle);
+
+      // Rayos hacia los 12 semitonos
+      for (let i = 0; i < 12; i++) {
+        const rad = (i * 30 - 90) * (Math.PI / 180);
+        const x2 = cx + r * Math.cos(rad);
+        const y2 = cy + r * Math.sin(rad);
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", cx);
+        line.setAttribute("y1", cy);
+        line.setAttribute("x2", x2);
+        line.setAttribute("y2", y2);
+        line.setAttribute("stroke", "rgba(255, 255, 255, 0.06)");
+        line.setAttribute("stroke-width", "1.5");
+        wheelSvg.appendChild(line);
+      }
+
+      // Polígono de la Escala
+      const polyCoords = def.pattern.map(offset => {
+        const noteIdx = (currentRoot + offset) % 12;
+        const rad = (noteIdx * 30 - 90) * (Math.PI / 180);
+        return {
+          idx: noteIdx,
+          x: cx + r * Math.cos(rad),
+          y: cy + r * Math.sin(rad)
+        };
+      });
+
+      const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+      polygon.setAttribute("points", polyCoords.map(p => `${p.x},${p.y}`).join(" "));
+      polygon.setAttribute("fill", "rgba(6, 182, 212, 0.14)");
+      polygon.setAttribute("stroke", "#06b6d4");
+      polygon.setAttribute("stroke-width", "3");
+      polygon.setAttribute("stroke-linejoin", "round");
+      polygon.setAttribute("class", "scale-poly");
+      wheelSvg.appendChild(polygon);
+
+      // 12 Nodos Interactivos
+      for (let i = 0; i < 12; i++) {
+        const rad = (i * 30 - 90) * (Math.PI / 180);
+        const x = cx + r * Math.cos(rad);
+        const y = cy + r * Math.sin(rad);
+        const isActive = activeNotes.includes(i);
+        const isRoot = (i === currentRoot);
+
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.setAttribute("class", "cursor-pointer");
+        g.dataset.index = i;
+
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", x);
+        circle.setAttribute("cy", y);
+        circle.setAttribute("r", isRoot ? "20" : (isActive ? "16" : "10"));
+        circle.setAttribute("fill", isRoot ? "#a855f7" : (isActive ? "#06b6d4" : "#181a24"));
+        circle.setAttribute("stroke", isRoot ? "#d8b4fe" : (isActive ? "#67e8f9" : "#374151"));
+        circle.setAttribute("stroke-width", isRoot ? "3.5" : (isActive ? "2.5" : "1.5"));
+        circle.setAttribute("id", `node-${i}`);
+        circle.setAttribute("class", "transition-all duration-200");
+
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", x);
+        text.setAttribute("y", y + 5);
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("font-size", isRoot ? "13" : (isActive ? "12" : "10"));
+        text.setAttribute("font-weight", isActive ? "bold" : "normal");
+        text.setAttribute("fill", isActive ? "#000000" : "#64748b");
+        text.textContent = noteNames[i];
+
+        g.appendChild(circle);
+        g.appendChild(text);
+
+        g.addEventListener("mouseenter", () => previewNote(i));
+        g.addEventListener("mouseleave", () => stopTone());
+        g.addEventListener("mousedown", () => previewNote(i));
+
+        wheelSvg.appendChild(g);
+      }
+    }
+
+    function previewNote(noteIdx) {
+      if (isPlayingSequence) return;
+      const freq = getNoteFrequency(noteIdx, 4);
+      playTone(freq);
+      highlightNode(noteIdx);
+    }
+
+    function highlightNode(noteIdx) {
+      const centerNote = document.getElementById("centerNoteDisplay");
+      const centerHz = document.getElementById("centerHzDisplay");
+      const centerRatio = document.getElementById("centerRatioDisplay");
+
+      document.querySelectorAll("[id^='node-']").forEach(n => {
+        n.classList.remove("brightness-150", "scale-110");
+      });
+      document.querySelectorAll(".p-key").forEach(k => {
+        k.classList.remove("ring-2", "ring-cyan-400", "scale-105");
+      });
+
+      if (noteIdx === null) {
+        centerNote.textContent = "--";
+        centerHz.textContent = "Toca o pasa el cursor";
+        centerRatio.textContent = "--";
+        return;
+      }
+
+      const node = document.getElementById(`node-${noteIdx}`);
+      if (node) {
+        node.classList.add("brightness-150", "scale-110");
+      }
+      const pKey = document.getElementById(`piano-key-${noteIdx}`);
+      if (pKey) {
+        pKey.classList.add("ring-2", "ring-cyan-400", "scale-105");
+      }
+
+      const freq = getNoteFrequency(noteIdx, 4);
+      centerNote.textContent = noteNames[noteIdx];
+      centerHz.textContent = `${freq.toFixed(1)} Hz`;
+
+      const semitoneDist = (noteIdx - currentRoot + 12) % 12;
+      const ratio = Math.pow(2, semitoneDist / 12);
+      centerRatio.textContent = `Intervalo: +${semitoneDist} semitonos (×${ratio.toFixed(3)})`;
+    }
+
+    // --- ACTUALIZACIÓN DE HISTORIA Y PANELES ---
+    function updateDetails() {
+      const def = scaleDB[currentScaleKey];
+      document.getElementById("modeNameTag").textContent = def.name;
+      document.getElementById("modeTitle").textContent = def.title;
+      document.getElementById("modeHistoryText").innerHTML = def.history;
+      document.getElementById("hitoLabel").textContent = def.hitoLabel;
+      document.getElementById("hitoText").textContent = def.hitoText;
+
+      // Bitmask
+      const activeNotes = getActiveScaleNotes();
+      let bits = "";
+      for (let i = 0; i < 12; i++) {
+        bits += activeNotes.includes(i) ? "1" : "0";
+      }
+      document.getElementById("scaleBitmask").textContent = `Bitmask: ${bits}`;
+
+      // Pasos
+      document.getElementById("stepIntervalBadge").textContent = def.steps.join(" - ");
+      const stepContainer = document.getElementById("stepBadgesContainer");
+      stepContainer.innerHTML = "";
+      def.steps.forEach(s => {
+        const badge = document.createElement("div");
+        const isSemi = s === "S";
+        badge.className = `flex-1 py-1.5 text-center font-bold text-xs rounded-lg ${
+          isSemi ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+        }`;
+        badge.textContent = s === "S" ? "S (+5.9%)" : "T (+12.2%)";
+        stepContainer.appendChild(badge);
+      });
+
+      // Teclado Lineal
+      const pianoKeys = document.getElementById("pianoKeys");
+      pianoKeys.innerHTML = "";
+      for (let i = 0; i < 12; i++) {
+        const isActive = activeNotes.includes(i);
+        const isRoot = (i === currentRoot);
+        const btn = document.createElement("button");
+        btn.id = `piano-key-${i}`;
+        btn.className = `p-key py-3 px-1 rounded-xl text-center transition-all ${
+          isRoot ? 'bg-purple-600 text-white font-bold shadow-lg shadow-purple-600/30' :
+          isActive ? 'bg-cyan-950/80 border border-cyan-500/50 text-cyan-200 font-bold' :
+          'bg-zinc-900/40 border border-zinc-800 text-zinc-600 opacity-40 hover:opacity-80'
+        }`;
+        btn.innerHTML = `
+          <div class="text-sm font-bold">${noteNames[i]}</div>
+          <div class="text-[11px] font-mono text-zinc-400 mt-1">${getNoteFrequency(i, 4).toFixed(0)} Hz</div>
+        `;
+        btn.addEventListener("mouseenter", () => previewNote(i));
+        btn.addEventListener("mouseleave", () => stopTone());
+        btn.addEventListener("mousedown", () => previewNote(i));
+        pianoKeys.appendChild(btn);
+      }
+    }
+
+    // --- REPRODUCTOR DE CANCIONES ---
+    let currentSongKey = "silentNight";
+    let isPlayingSong = false;
+    let songNoteTimeout = null;
+
+    function playSong() {
+      if (isPlayingSong) return;
+      isPlayingSong = true;
+      const song = songsDB[currentSongKey];
+      const notes = song.notes;
+      let noteIdx = 0;
+
+      // Ajustar escala y raíz según la canción
+      currentScaleKey = song.scaleKey;
+      currentRoot = song.root;
+      renderWheel();
+      updateDetails();
+
+      const msPerBeat = 60000 / song.bpm;
+      const displayNote = document.getElementById("playingNoteName");
+      const displayMeta = document.getElementById("playingNoteMeta");
+
+      function nextNote() {
+        if (!isPlayingSong || noteIdx >= notes.length) {
+          isPlayingSong = false;
+          stopTone();
+          displayNote.textContent = "Fin";
+          displayMeta.textContent = "Melodía completada";
+          return;
+        }
+
+        const noteObj = notes[noteIdx];
+        const semitoneFromC = noteObj.n;
+        const durMs = noteObj.d * msPerBeat;
+
+        const noteClass = semitoneFromC % 12;
+        const octave = 4 + Math.floor(semitoneFromC / 12);
+        const freq = getNoteFrequency(noteClass, octave);
+
+        playTone(freq, (durMs / 1000) * 0.88);
+        highlightNode(noteClass);
+
+        displayNote.textContent = noteNames[noteClass];
+        displayMeta.textContent = `${freq.toFixed(1)} Hz | Duración: ${noteObj.d} tiempos`;
+
+        noteIdx++;
+        songNoteTimeout = setTimeout(nextNote, durMs);
+      }
+
+      nextNote();
+    }
+
+    function stopSong() {
+      isPlayingSong = false;
+      if (songNoteTimeout) clearTimeout(songNoteTimeout);
+      stopTone();
+      document.getElementById("playingNoteName").textContent = "--";
+      document.getElementById("playingNoteMeta").textContent = "Detenido";
+    }
+
+    // --- MODO JUEGO: ¿CUÁL NOTA DEBERÍA SEGUIR? ---
+    let gameScore = 0;
+    let gameStreak = 0;
+    let currentChallenge = null;
+
+    const gameChallenges = [
+      {
+        scale: "major",
+        scaleName: "C Mayor",
+        root: 0,
+        seq: [0, 2, 4], // C, D, E
+        answer: 5, // F
+        options: [5, 6, 7, 3], // F, F#, G, D#
+        hint: "De Mi (E) al siguiente grado de la escala Mayor solo hay un Semitono (+5.95%)."
+      },
+      {
+        scale: "dorian",
+        scaleName: "D Dórico",
+        root: 2,
+        seq: [2, 4, 5, 7], // D, E, F, G
+        answer: 9, // A (5ª justa)
+        options: [9, 8, 10, 11], // A, G#, Bb, B
+        hint: "El siguiente paso tras Sol (G) es un Tono completo hasta la quinta justa."
+      },
+      {
+        scale: "major",
+        scaleName: "G Mayor",
+        root: 7,
+        seq: [7, 9, 11, 0, 2, 4], // G, A, B, C, D, E
+        answer: 6, // F# (la sensible)
+        options: [6, 5, 7, 8], // F#, F, G, G#
+        hint: "La escala Mayor necesita la 'sensible' a medio tono de la tónica final: F# a G."
+      },
+      {
+        scale: "minor",
+        scaleName: "A Menor",
+        root: 9,
+        seq: [9, 11], // A, B
+        answer: 0, // C (3ª menor)
+        options: [0, 1, 2, 8], // C, C#, D, G#
+        hint: "En el modo menor, el tercer grado está a solo 3 semitonos de la tónica (Do natural, no Do#)."
+      }
+    ];
+
+    let challengeIdx = 0;
+
+    function loadGameChallenge() {
+      const ch = gameChallenges[challengeIdx % gameChallenges.length];
+      currentChallenge = ch;
+
+      document.getElementById("gameScaleContext").textContent = `Escala: ${ch.scaleName}`;
+      const noteSequenceStr = ch.seq.map(idx => noteNames[idx]).join("  →  ");
+      document.getElementById("gameQuestionText").textContent = `Secuencia: ${noteSequenceStr}  →  ¿?`;
+      document.getElementById("gameHint").textContent = `Pista: ${ch.hint}`;
+
+      const optsContainer = document.getElementById("gameOptionsContainer");
+      optsContainer.innerHTML = "";
+
+      // Desordenar opciones
+      const shuffled = [...ch.options].sort(() => Math.random() - 0.5);
+
+      shuffled.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "p-4 rounded-2xl bg-zinc-800/90 hover:bg-zinc-700 border border-zinc-700 text-white font-extrabold text-lg transition-all transform hover:scale-105 active:scale-95";
+        btn.textContent = noteNames[opt];
+        btn.addEventListener("click", () => verifyAnswer(opt, btn));
+        optsContainer.appendChild(btn);
+      });
+
+      document.getElementById("gameFeedback").className = "hidden";
+      document.getElementById("btnNextQuestion").classList.add("hidden");
+
+      // Reproducir automáticamente la secuencia
+      playChallengeSequence();
+    }
+
+    function playChallengeSequence() {
+      if (!currentChallenge) return;
+      const seq = currentChallenge.seq;
+      let i = 0;
+      function step() {
+        if (i >= seq.length) {
+          stopTone();
+          return;
+        }
+        const note = seq[i];
+        playTone(getNoteFrequency(note, 4), 0.38);
+        highlightNode(note);
+        i++;
+        setTimeout(step, 450);
+      }
+      step();
+    }
+
+    function verifyAnswer(chosenNote, btnElement) {
+      const isCorrect = (chosenNote === currentChallenge.answer);
+      const feedback = document.getElementById("gameFeedback");
+      feedback.classList.remove("hidden");
+
+      // Desactivar botones de respuesta
+      document.querySelectorAll("#gameOptionsContainer button").forEach(b => b.disabled = true);
+
+      if (isCorrect) {
+        gameScore += 100;
+        gameStreak++;
+        btnElement.classList.add("bg-emerald-600", "border-emerald-400", "text-white");
+        feedback.className = "p-4 rounded-xl text-sm font-semibold bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 max-w-xl mx-auto";
+        feedback.innerHTML = `
+          ¡Exacto! 🎵 <strong>${noteNames[chosenNote]}</strong> es la nota matemáticamente coherente.
+          <p class="text-xs text-zinc-300 mt-1">${currentChallenge.hint}</p>
+        `;
+        playTone(getNoteFrequency(chosenNote, 4), 0.6);
+      } else {
+        gameStreak = 0;
+        btnElement.classList.add("bg-rose-900", "border-rose-500", "text-white");
+        feedback.className = "p-4 rounded-xl text-sm font-semibold bg-rose-950/80 border border-rose-500/50 text-rose-300 max-w-xl mx-auto";
+        feedback.innerHTML = `
+          Nota incorrecta. La nota correcta era <strong>${noteNames[currentChallenge.answer]}</strong>.
+          <p class="text-xs text-zinc-300 mt-1">${currentChallenge.hint}</p>
+        `;
+      }
+
+      document.getElementById("gameScore").textContent = gameScore;
+      document.getElementById("gameStreak").textContent = `${gameStreak} 🔥`;
+      document.getElementById("btnNextQuestion").classList.remove("hidden");
+    }
+
+    // --- EVENTOS Y CONTROLES GLOBALES ---
+
+    // Pestañas
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => {
+          b.className = "tab-btn px-5 py-2.5 rounded-xl text-base font-bold text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-all";
+        });
+        btn.className = "tab-btn active px-5 py-2.5 rounded-xl text-base font-bold bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 transition-all";
+
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.add("hidden"));
+        const targetTab = document.getElementById(btn.dataset.tab);
+        if (targetTab) targetTab.classList.remove("hidden");
+
+        if (btn.dataset.tab === "tab-game" && !currentChallenge) {
+          loadGameChallenge();
+        }
+      });
+    });
+
+    // Afinación 440 vs 432
+    document.getElementById("btnSet440").addEventListener("click", () => {
+      baseA4 = 440.0;
+      document.getElementById("currentA4Label").textContent = "A4 = 440.0 Hz";
+      document.getElementById("btnSet440").className = "px-4 py-2 rounded-xl text-sm font-bold bg-cyan-500 text-black shadow-lg shadow-cyan-500/25 transition-all";
+      document.getElementById("btnSet432").className = "px-4 py-2 rounded-xl text-sm font-bold text-zinc-400 bg-zinc-800/80 hover:text-white transition-all";
+      updateDetails();
+    });
+
+    document.getElementById("btnSet432").addEventListener("click", () => {
+      baseA4 = 432.0;
+      document.getElementById("currentA4Label").textContent = "A4 = 432.0 Hz";
+      document.getElementById("btnSet432").className = "px-4 py-2 rounded-xl text-sm font-bold bg-cyan-500 text-black shadow-lg shadow-cyan-500/25 transition-all";
+      document.getElementById("btnSet440").className = "px-4 py-2 rounded-xl text-sm font-bold text-zinc-400 bg-zinc-800/80 hover:text-white transition-all";
+      updateDetails();
+    });
+
+    // Selectores de Modo
+    document.querySelectorAll(".scale-selector").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".scale-selector").forEach(b => {
+          b.className = "scale-selector p-3 rounded-xl border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:border-zinc-700 text-left transition-all";
+        });
+        btn.className = "scale-selector active p-3 rounded-xl border border-cyan-500 bg-cyan-500/20 text-cyan-300 text-left transition-all";
+        currentScaleKey = btn.dataset.scale;
+        renderWheel();
+        updateDetails();
+      });
+    });
+
+    // Selector de Raíz
+    document.getElementById("rootPicker").addEventListener("change", (e) => {
+      currentRoot = parseInt(e.target.value, 10);
+      renderWheel();
+      updateDetails();
+    });
+
+    // Arpegiar Escala Completa
+    document.getElementById("btnPlayScaleSweep").addEventListener("click", () => {
+      if (isPlayingSequence) return;
+      isPlayingSequence = true;
+      const def = scaleDB[currentScaleKey];
+      const seq = [...def.pattern, 12];
+      let stepIdx = 0;
+
+      function step() {
+        if (!isPlayingSequence || stepIdx >= seq.length) {
+          isPlayingSequence = false;
+          stopTone();
+          return;
+        }
+        const offset = seq[stepIdx];
+        const noteIdx = (currentRoot + offset) % 12;
+        const octave = (offset >= 12) ? 5 : 4;
+        const freq = getNoteFrequency(noteIdx, octave);
+
+        playTone(freq, 0.35);
+        highlightNode(noteIdx);
+        stepIdx++;
+        setTimeout(step, 420);
+      }
+      step();
+    });
+
+    // Selección y Reproducción de Canciones
+    document.querySelectorAll(".song-card").forEach(card => {
+      card.addEventListener("click", () => {
+        document.querySelectorAll(".song-card").forEach(c => {
+          c.className = "song-card p-4 rounded-2xl border border-zinc-800 bg-zinc-900/60 text-left hover:border-zinc-700 transition-all";
+        });
+        card.className = "song-card active p-4 rounded-2xl border border-cyan-500 bg-cyan-500/10 text-left transition-all";
+        currentSongKey = card.dataset.song;
+        const song = songsDB[currentSongKey];
+        document.getElementById("currentSongTitle").textContent = song.title;
+        document.getElementById("currentSongScaleLabel").textContent = `Modo/Escala: ${scaleDB[song.scaleKey].name} en ${noteNames[song.root]}`;
+      });
+    });
+
+    document.getElementById("btnPlaySong").addEventListener("click", playSong);
+    document.getElementById("btnStopSong").addEventListener("click", stopSong);
+
+    // Controles del Juego
+    document.getElementById("btnHearSequence").addEventListener("click", playChallengeSequence);
+    document.getElementById("btnNextQuestion").addEventListener("click", () => {
+      challengeIdx++;
+      loadGameChallenge();
+    });
+
+    // Función de descarga del HTML para el usuario
+    function downloadSelf() {
+      const blob = new Blob([document.documentElement.outerHTML], { type: "text/html;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "index.html";
+      a.click();
+    }
+
+    // Inicialización al cargar
+    renderWheel();
+    updateDetails();
+  </script>
+</body>
+</html>
